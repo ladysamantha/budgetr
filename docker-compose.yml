@@ -6,3 +6,13 @@ services:
   backend:
     image: tenders/budgetr-backend
     build: ./backend
+    depends_on:
+    - postgres
+  postgres:
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_USER: budgetr
+      POSTGRES_PASSWORD: budgetr
+      POSTGRES_DB: budgetr
+    ports:
+    - 5432:5432
