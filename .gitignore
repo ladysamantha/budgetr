@@ -7,3 +7,10 @@ erl_crash.dump
 *.ez
 *.beam
 /config/*.secret.exs
+
+# node specifics
+node_modules/
+dist/
+build/
+*.map
+*.log
