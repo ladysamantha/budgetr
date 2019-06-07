@@ -6,6 +6,9 @@ services:
   backend:
     image: tenders/budgetr-backend
     build: ./backend
+    # port for the Phoenix web server
+    ports:
+    - 4000:4000
     depends_on:
     - postgres
   postgres:
