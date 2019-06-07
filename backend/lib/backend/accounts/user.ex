@@ -7,6 +7,7 @@ defmodule Backend.Accounts.User do
     field :external_id, :string
     field :first_name, :string
     field :last_name, :string
+    has_many :transactions, Backend.Budgets.Transaction
 
     timestamps()
   end

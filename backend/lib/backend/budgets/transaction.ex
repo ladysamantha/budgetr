@@ -7,6 +7,7 @@ defmodule Backend.Budgets.Transaction do
     field :category, :string
     field :datetime_occurred, :utc_datetime
     field :description, :string
+    belongs_to :user, Backend.Accounts.User
 
     timestamps()
   end
