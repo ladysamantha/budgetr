@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { Container, Message } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
+
+import { Message } from 'semantic-ui-react'
+
 import { GoogleLogin } from 'react-google-login'
 
 type LoginErrorProps = { error: Partial<Error> }
@@ -35,12 +38,17 @@ export const Login: React.FC = () => {
 
   if (loginState.profile) {
     return (
-      <p>Welcome back, {loginState.profile.givenName}!</p>
+      <Redirect
+        to={{
+          pathname: "/dashboard",
+          state: { user: loginState.profile },
+        }}
+      />
     )
   }
 
   return (
-    <Container>
+    <>
       <GoogleLogin
         clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
         buttonText="Login with Google"
@@ -49,7 +57,7 @@ export const Login: React.FC = () => {
         onFailure={failure}
       />
       { loginState.error ? <LoginError error={loginState.error} /> : null }
-    </Container>
+    </>
   )
 }
 
