@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom';
 
 import {
   Button,
@@ -13,35 +13,37 @@ import {
   Search,
   Segment,
   StatisticGroup,
-  Statistic,
-} from 'semantic-ui-react'
+  Statistic
+} from 'semantic-ui-react';
 
-export const Dashboard = ({ location }: RouteComponentProps) => {
-  const { user } = location.state
+export const Dashboard: React.FC<RouteComponentProps> = ({
+  location
+}: RouteComponentProps) => {
+  const { user } = location.state;
 
   return (
     <Container>
-      <div style={{margin: '1rem'}}>
-        <Header as='h2'>Welcome back, {user.name}!</Header>
+      <div style={{ margin: '1rem' }}>
+        <Header as="h2">Welcome back, {user.name}!</Header>
       </div>
       <Segment>
-        <StatisticGroup widths='2'>
-          <Statistic color='green'>
+        <StatisticGroup widths="2">
+          <Statistic color="green">
             <Statistic.Value>$1,766</Statistic.Value>
             <Statistic.Label>Amount Remaining</Statistic.Label>
           </Statistic>
-          <Statistic color='blue'>
+          <Statistic color="blue">
             <Statistic.Value>25</Statistic.Value>
             <Statistic.Label>Transactions this month</Statistic.Label>
           </Statistic>
         </StatisticGroup>
       </Segment>
       <Grid>
-        <Grid.Column width={8} float='left'>
+        <Grid.Column width={8} float="left">
           <Search />
         </Grid.Column>
       </Grid>
-      <Table celled padded selectable color='blue'>
+      <Table celled padded selectable color="blue">
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Description</Table.HeaderCell>
@@ -60,18 +62,18 @@ export const Dashboard = ({ location }: RouteComponentProps) => {
         </Table.Body>
         <Table.Footer fullWidth>
           <Table.Row>
-            <Table.HeaderCell colSpan='4'>
+            <Table.HeaderCell colSpan="4">
               <Button secondary>
-                <Icon name='upload' />
+                <Icon name="upload" />
                 Bulk Upload
               </Button>
-              <Pagination 
+              <Pagination
                 defaultActivePage={1}
                 totalPages={3}
-                style={{marginLeft: '0.5rem'}}
+                style={{ marginLeft: '0.5rem' }}
               />
-              <Button primary floated='right'>
-                <Icon name='plus' />
+              <Button primary floated="right">
+                <Icon name="plus" />
                 Add Transaction
               </Button>
             </Table.HeaderCell>
@@ -79,5 +81,5 @@ export const Dashboard = ({ location }: RouteComponentProps) => {
         </Table.Footer>
       </Table>
     </Container>
-  )
-}
+  );
+};
