@@ -2,9 +2,9 @@ use Mix.Config
 
 # Configure your database
 config :backend, Backend.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "backend_test",
+  username: "budgetr",
+  password: "budgetr",
+  database: "budgetr_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

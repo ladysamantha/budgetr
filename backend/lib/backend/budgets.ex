@@ -52,6 +52,7 @@ defmodule Backend.Budgets do
   def create_transaction(attrs \\ %{}) do
     %Transaction{}
     |> Transaction.changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:user, with: &Backend.Accounts.User.changeset/2)
     |> Repo.insert()
   end
 
