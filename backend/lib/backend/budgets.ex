@@ -63,6 +63,29 @@ defmodule Backend.Budgets do
   end
 
   @doc """
+  Bulk uploads transactions from a CSV file
+
+  The file location will be created by Phx/Plug
+
+  ## Note
+  Due to the nature of [insert_all/3](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3) the timestamp columns need to be generated manually
+  """
+  def bulk_create_transactions(csv_file) do
+    txs = csv_file
+          |> File.stream!
+          |> CSV.decode(headers: true)
+          |> Enum.filter(fn {result, _} -> result == :ok end)
+          |> Enum.map(fn {:ok, data} -> data end)
+          |> Enum.map(fn %{"user_id" => user_id} = tx -> %{tx | "user_id" => String.to_integer(user_id)} end)
+          |> Enum.map(fn %{"amount" => amt} = tx -> %{tx | "amount" => String.to_integer(amt)} end)
+          |> Enum.map(fn %{"datetime_occurred" => dt} = tx -> %{tx | "datetime_occurred" => DateTime.from_iso8601(dt) |> elem(1) |> DateTime.truncate(:second)} end)
+          |> Enum.map(fn tx -> Map.put(tx, "inserted_at", NaiveDateTime.utc_now |> NaiveDateTime.truncate(:second)) end)
+          |> Enum.map(fn tx -> Map.put(tx, "updated_at", NaiveDateTime.utc_now |> NaiveDateTime.truncate(:second)) end)
+          |> Enum.map(fn tx -> Map.new(tx, fn {k, v} -> {String.to_atom(k), v} end) end)
+    Repo.insert_all(Transaction, txs)
+  end
+
+  @doc """
   Updates a transaction.
 
   ## Examples

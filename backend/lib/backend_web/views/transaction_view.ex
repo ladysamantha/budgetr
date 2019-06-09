@@ -17,4 +17,8 @@ defmodule BackendWeb.TransactionView do
       description: transaction.description,
       category: transaction.category}
   end
+
+  def render("bulk.json", %{num_created: num}) do
+    %{transactions_created: num}
+  end
 end

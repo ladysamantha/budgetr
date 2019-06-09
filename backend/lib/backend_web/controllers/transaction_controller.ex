@@ -16,6 +16,15 @@ defmodule BackendWeb.TransactionController do
     render(conn, "index.json", transactions: transactions)
   end
 
+  def create(conn, %{"transactions" => transactions_file}) do
+    filepath = transactions_file.path 
+    with {num_tx_created, _} <- Budgets.bulk_create_transactions(filepath) do
+      conn
+      |> put_status(:created)
+      |> render("bulk.json", num_created: num_tx_created)
+    end
+  end
+
   def create(conn, %{"transaction" => transaction_params}) do
     with {:ok, %Transaction{} = transaction} <- Budgets.create_transaction(transaction_params) do
       conn

@@ -13,6 +13,7 @@ defmodule BackendWeb.Router do
     end
 
     resources "/transactions", TransactionController, except: [:new, :edit]
+    post "/transactions/bulk", TransactionController, :create
     resources "/goals", GoalController, except: [:new, :edit]
   end
 end
