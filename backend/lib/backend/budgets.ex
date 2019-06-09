@@ -4,9 +4,16 @@ defmodule Backend.Budgets do
   """
 
   import Ecto.Query, warn: false
+  require Ecto.Query
   alias Backend.Repo
 
   alias Backend.Budgets.Transaction
+
+  @doc """
+  """
+  def list_transactions(user_id) do
+    Ecto.Query.where(Transaction, user_id: ^user_id) |> Repo.all
+  end
 
   @doc """
   Returns the list of transactions.
@@ -52,7 +59,6 @@ defmodule Backend.Budgets do
   def create_transaction(attrs \\ %{}) do
     %Transaction{}
     |> Transaction.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:user, with: &Backend.Accounts.User.changeset/2)
     |> Repo.insert()
   end
 

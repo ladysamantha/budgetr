@@ -1,9 +1,9 @@
 defmodule BackendWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :backend
 
-  socket "/socket", BackendWeb.UserSocket,
-    websocket: true,
-    longpoll: false
+  # socket "/socket", BackendWeb.UserSocket,
+  #   websocket: true,
+  #   longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
   #

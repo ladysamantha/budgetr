@@ -25,6 +25,7 @@ export const Login: React.FC = () => {
   });
 
   const success = (result: any) => {
+    console.log(result.tokenObj);
     setState({
       profile: result.profileObj,
       error: null

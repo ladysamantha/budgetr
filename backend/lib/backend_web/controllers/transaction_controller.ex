@@ -6,6 +6,11 @@ defmodule BackendWeb.TransactionController do
 
   action_fallback BackendWeb.FallbackController
 
+  def index(conn, %{"user_id" => user_id}) do
+    transactions = Budgets.list_transactions(user_id)
+    render(conn, "index.json", transactions: transactions)
+  end
+
   def index(conn, _params) do
     transactions = Budgets.list_transactions()
     render(conn, "index.json", transactions: transactions)

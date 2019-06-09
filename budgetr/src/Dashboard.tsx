@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { RouteComponentProps } from 'react-router-dom';
 
 import {
   Button,
   Container,
+  Form,
   Grid,
-  Header,
   Icon,
+  Menu,
+  Modal,
   Pagination,
   Table,
   Search,
@@ -16,16 +18,66 @@ import {
   Statistic
 } from 'semantic-ui-react';
 
+interface DashboardState {
+  transactions: any[];
+}
+
 export const Dashboard: React.FC<RouteComponentProps> = ({
   location
 }: RouteComponentProps) => {
-  const { user } = location.state;
+  // const { user } = location.state;
+  const [state, setState] = useState<DashboardState>({
+    transactions: []
+  });
+
+  useEffect(() => {
+    fetch('/api/users/1/transactions')
+      .then(res => res.json())
+      .then(body =>
+        body.data.filter(
+          (transaction: { amount: number }) => !!transaction.amount
+        )
+      )
+      .then(data => {
+        console.log(data);
+        return data;
+      })
+      .then(txs => setState({ transactions: txs }));
+  }, []);
+
+  const renderTransactionRow = (
+    { description, category, amount, datetime_occurred }: any,
+    index: number
+  ) => {
+    return (
+      <Table.Row key={index}>
+        <Table.Cell>{description}</Table.Cell>
+        <Table.Cell>{category}</Table.Cell>
+        <Table.Cell>{amount}</Table.Cell>
+        <Table.Cell>
+          {new Date(datetime_occurred).toLocaleString('en-US')}
+        </Table.Cell>
+      </Table.Row>
+    );
+  };
 
   return (
     <Container>
-      <div style={{ margin: '1rem' }}>
-        <Header as="h2">Welcome back, {user.name}!</Header>
-      </div>
+      <Menu
+        secondary
+        color="blue"
+        style={{ padding: '1em', fontSize: '1.2em' }}
+      >
+        <Menu.Item position="left" name="Budgetr" />
+        <Menu.Menu position="right">
+          <Menu.Item>
+            <Button primary>
+              <Icon name="sign-out" />
+              Sign Out
+            </Button>
+          </Menu.Item>
+        </Menu.Menu>
+      </Menu>
       <Segment>
         <StatisticGroup widths="2">
           <Statistic color="green">
@@ -52,14 +104,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
             <Table.HeaderCell>Date Occurred</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>Fancy Coffee</Table.Cell>
-            <Table.Cell>Food</Table.Cell>
-            <Table.Cell>Amount</Table.Cell>
-            <Table.Cell>June 6, 2018 7:46 AM</Table.Cell>
-          </Table.Row>
-        </Table.Body>
+        <Table.Body>{state.transactions.map(renderTransactionRow)}</Table.Body>
         <Table.Footer fullWidth>
           <Table.Row>
             <Table.HeaderCell colSpan="4">
@@ -72,10 +117,19 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
                 totalPages={3}
                 style={{ marginLeft: '0.5rem' }}
               />
-              <Button primary floated="right">
-                <Icon name="plus" />
-                Add Transaction
-              </Button>
+              <Modal
+                trigger={
+                  <Button primary floated="right">
+                    <Icon name="plus" />
+                    Add Transaction
+                  </Button>
+                }
+              >
+                <Modal.Header>Add a Transaction</Modal.Header>
+                <Modal.Content>
+                  <Form></Form>
+                </Modal.Content>
+              </Modal>
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>

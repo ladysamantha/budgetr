@@ -15,7 +15,8 @@ defmodule Backend.Budgets.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:datetime_occurred, :amount, :description, :category])
+    |> cast(attrs, [:datetime_occurred, :amount, :description, :category, :user_id])
+    |> foreign_key_constraint(:user_id)
     |> validate_required([:datetime_occurred, :amount, :description, :category])
   end
 end
