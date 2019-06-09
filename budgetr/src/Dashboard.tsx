@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -26,13 +26,37 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
   location
 }: RouteComponentProps) => {
   // const { user } = location.state;
-  const [userId, setUserId] = useState<number>(1);
+  const userId = 1;
+  const [transactionsUrl, setTransactionsUrl] = useState<string>(
+    `/api/users/${userId}/transactions`
+  );
   const [state, setState] = useState<DashboardState>({
     transactions: []
   });
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const onUploadClicked = () => {
+    if (fileInputRef && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const uploadFile = (files: FileList | null) => {
+    if (typeof files === 'undefined' || files === null) {
+      return;
+    }
+    const file = files[0];
+    const formData = new FormData();
+    formData.append('transactions', file);
+    fetch('/api/transactions/bulk', {
+      method: 'POST',
+      body: formData
+    }).then(() => {
+      setTransactionsUrl(`api/users/${userId}/transactions`);
+    });
+  };
+
   useEffect(() => {
-    fetch(`/api/users/${userId}/transactions`)
+    fetch(transactionsUrl)
       .then(res => res.json())
       .then(body =>
         body.data.filter(
@@ -42,7 +66,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
       .then(txs => {
         setState({ transactions: txs });
       });
-  }, [userId]);
+  }, [transactionsUrl]);
 
   const renderTransactionRow = (
     { description, category, amount, datetime_occurred }: any,
@@ -107,7 +131,13 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
         <Table.Footer fullWidth>
           <Table.Row>
             <Table.HeaderCell colSpan="4">
-              <Button secondary>
+              <Button secondary onClick={onUploadClicked}>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={e => uploadFile(e.target.files)}
+                />
                 <Icon name="upload" />
                 Bulk Upload
               </Button>
@@ -118,9 +148,6 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
                     Add Transaction
                   </Button>
                 }
-                onClose={() => {
-                  console.log('onClose');
-                }}
               >
                 <Modal.Header>Add a Transaction</Modal.Header>
                 <Modal.Content>
