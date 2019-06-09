@@ -9,7 +9,7 @@ defmodule BackendWeb.Router do
     pipe_through :api
 
     resources "/users", UserController do
-      resources "/transactions", TransactionController, only: [:index]
+      resources "/transactions", TransactionController, only: [:index, :create]
     end
 
     resources "/transactions", TransactionController, except: [:new, :edit]

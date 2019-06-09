@@ -12,7 +12,7 @@ defmodule Backend.Budgets do
   @doc """
   """
   def list_transactions(user_id) do
-    Ecto.Query.where(Transaction, user_id: ^user_id) |> Repo.all
+    from(t in Transaction, where: t.user_id == ^user_id, order_by: [desc: t.datetime_occurred]) |> Repo.all
   end
 
   @doc """

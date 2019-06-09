@@ -5,18 +5,18 @@ import { RouteComponentProps } from 'react-router-dom';
 import {
   Button,
   Container,
-  Form,
   Grid,
   Icon,
   Menu,
   Modal,
-  Pagination,
   Table,
   Search,
   Segment,
   StatisticGroup,
   Statistic
 } from 'semantic-ui-react';
+
+import { AddTransactionForm } from './AddTransactionForm';
 
 interface DashboardState {
   transactions: any[];
@@ -26,24 +26,23 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
   location
 }: RouteComponentProps) => {
   // const { user } = location.state;
+  const [userId, setUserId] = useState<number>(1);
   const [state, setState] = useState<DashboardState>({
     transactions: []
   });
 
   useEffect(() => {
-    fetch('/api/users/1/transactions')
+    fetch(`/api/users/${userId}/transactions`)
       .then(res => res.json())
       .then(body =>
         body.data.filter(
           (transaction: { amount: number }) => !!transaction.amount
         )
       )
-      .then(data => {
-        console.log(data);
-        return data;
-      })
-      .then(txs => setState({ transactions: txs }));
-  }, []);
+      .then(txs => {
+        setState({ transactions: txs });
+      });
+  }, [userId]);
 
   const renderTransactionRow = (
     { description, category, amount, datetime_occurred }: any,
@@ -53,7 +52,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
       <Table.Row key={index}>
         <Table.Cell>{description}</Table.Cell>
         <Table.Cell>{category}</Table.Cell>
-        <Table.Cell>{amount}</Table.Cell>
+        <Table.Cell>{amount / 100}</Table.Cell>
         <Table.Cell>
           {new Date(datetime_occurred).toLocaleString('en-US')}
         </Table.Cell>
@@ -95,7 +94,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
           <Search />
         </Grid.Column>
       </Grid>
-      <Table celled padded selectable color="blue">
+      <Table celled padded selectable sortable color="blue">
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Description</Table.HeaderCell>
@@ -112,11 +111,6 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
                 <Icon name="upload" />
                 Bulk Upload
               </Button>
-              <Pagination
-                defaultActivePage={1}
-                totalPages={3}
-                style={{ marginLeft: '0.5rem' }}
-              />
               <Modal
                 trigger={
                   <Button primary floated="right">
@@ -124,10 +118,20 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
                     Add Transaction
                   </Button>
                 }
+                onClose={() => {
+                  console.log('onClose');
+                }}
               >
                 <Modal.Header>Add a Transaction</Modal.Header>
                 <Modal.Content>
-                  <Form></Form>
+                  <AddTransactionForm
+                    userId={1}
+                    onTransactionAdded={(tx: any) => {
+                      setState({
+                        transactions: [tx, ...state.transactions]
+                      });
+                    }}
+                  />
                 </Modal.Content>
               </Modal>
             </Table.HeaderCell>
