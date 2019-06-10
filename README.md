@@ -1,12 +1,8 @@
 # budgetr
 
-A simple, yet functional budgeting app (yes the spelling is intentional :sunglasses:)
-
-[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com)
-
 ## Dependencies
 
-1. A Postgres database (you can use the docker-compose file to set one up)
+1. A Postgres database (you can use the docker-compose file to set one up, just run `docker-compose up -d`)
 2. Yarn/npm for the front-end app
 3. Elixir/Mix for the back-end app
 
@@ -16,6 +12,8 @@ Since it's a Phoenix app generated with `mix phx.new`, you can just do the follo
 
 ```bash
 cd backend
+
+mix deps.get
 
 # run to setup the ecto
 mix ecto.setup
@@ -30,6 +28,10 @@ In a different terminal screen/window
 
 ```bash
 cd budgetr
+# or npm install
+yarn
+
+# or npm start
 yarn start
 ```
 
