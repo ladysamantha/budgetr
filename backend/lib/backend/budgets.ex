@@ -12,7 +12,8 @@ defmodule Backend.Budgets do
   @doc """
   """
   def list_transactions(user_id) do
-    from(t in Transaction, where: t.user_id == ^user_id, order_by: [desc: t.datetime_occurred]) |> Repo.all
+    shift = Timex.shift(Timex.now(), days: -30)
+    from(t in Transaction, where: t.user_id == ^user_id, where: t.datetime_occurred > ^shift, order_by: [desc: t.datetime_occurred]) |> Repo.all
   end
 
   @doc """
