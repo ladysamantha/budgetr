@@ -16,6 +16,11 @@ Since it's a Phoenix app generated with `mix phx.new`, you can just do the follo
 
 ```bash
 cd backend
+
+# run to setup the ecto
+mix ecto.setup
+
+# or run iex for a shell
 mix phx.server
 ```
 
