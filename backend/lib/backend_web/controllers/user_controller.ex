@@ -20,6 +20,14 @@ defmodule BackendWeb.UserController do
     end
   end
 
+  def show(conn, %{"email" => email}) do
+    result = Accounts.get_user_by_email(email)
+    case result do
+      nil -> conn |> put_status(:not_found) |> render("404.json", email: email)
+      user -> render(conn, "show.json", user: user)
+    end
+  end
+
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     render(conn, "show.json", user: user)

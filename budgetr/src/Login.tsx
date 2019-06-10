@@ -25,11 +25,42 @@ export const Login: React.FC = () => {
   });
 
   const success = (result: any) => {
-    console.log(result.tokenObj);
-    setState({
-      profile: result.profileObj,
-      error: null
-    });
+    const { profileObj } = result;
+    const { email, familyName, givenName, googleId } = profileObj;
+    fetch('/api/users/fetch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    })
+      .then(res => {
+        if (!res.ok && res.status === 404) {
+          return fetch('/api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user: {
+                email,
+                first_name: givenName,
+                last_name: familyName,
+                external_id: googleId
+              }
+            })
+          }).then(res => res.json());
+        }
+
+        return res.json();
+      })
+      .then((res: { data: any }) => {
+        const user = res.data;
+        setState({
+          profile: user,
+          error: null
+        });
+      });
   };
 
   const failure = (error: Error) => {

@@ -5,12 +5,10 @@ import { RouteComponentProps } from 'react-router-dom';
 import {
   Button,
   Container,
-  Grid,
   Icon,
   Menu,
   Modal,
   Table,
-  Search,
   Segment,
   StatisticGroup,
   Statistic
@@ -25,8 +23,8 @@ interface DashboardState {
 export const Dashboard: React.FC<RouteComponentProps> = ({
   location
 }: RouteComponentProps) => {
-  // const { user } = location.state;
-  const userId = 1;
+  const { user } = location.state;
+  const userId = user.id;
   const [transactionsUrl, setTransactionsUrl] = useState<string>(
     `/api/users/${userId}/transactions`
   );
@@ -40,6 +38,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
       fileInputRef.current.click();
     }
   };
+
   const uploadFile = (files: FileList | null) => {
     if (typeof files === 'undefined' || files === null) {
       return;
@@ -84,6 +83,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
     );
   };
 
+  const clientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}`;
   return (
     <Container>
       <Menu
@@ -92,14 +92,10 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
         style={{ padding: '1em', fontSize: '1.2em' }}
       >
         <Menu.Item position="left" name="Budgetr" />
-        <Menu.Menu position="right">
-          <Menu.Item>
-            <Button primary>
-              <Icon name="sign-out" />
-              Sign Out
-            </Button>
-          </Menu.Item>
-        </Menu.Menu>
+        <Menu.Item
+          position="right"
+          name={`${user.first_name} ${user.last_name}`}
+        />
       </Menu>
       <Segment>
         <StatisticGroup widths="2">
@@ -113,11 +109,6 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
           </Statistic>
         </StatisticGroup>
       </Segment>
-      <Grid>
-        <Grid.Column width={8} float="left">
-          <Search />
-        </Grid.Column>
-      </Grid>
       <Table celled padded selectable sortable color="blue">
         <Table.Header>
           <Table.Row>
@@ -152,7 +143,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
                 <Modal.Header>Add a Transaction</Modal.Header>
                 <Modal.Content>
                   <AddTransactionForm
-                    userId={1}
+                    userId={userId}
                     onTransactionAdded={(tx: any) => {
                       setState({
                         transactions: [tx, ...state.transactions]

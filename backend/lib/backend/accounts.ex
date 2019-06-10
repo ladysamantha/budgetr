@@ -38,6 +38,13 @@ defmodule Backend.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single user by email
+  """
+  def get_user_by_email(email) do
+    from(u in User, where: u.email == ^email) |> Repo.one()
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples

@@ -17,4 +17,9 @@ defmodule BackendWeb.UserView do
       email: user.email,
       external_id: user.external_id}
   end
+
+  def render("404.json", %{email: email}) do
+    %{message: "Email not found",
+      email: email}
+  end
 end
