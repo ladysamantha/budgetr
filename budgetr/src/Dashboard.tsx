@@ -83,7 +83,10 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
     );
   };
 
-  const clientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}`;
+  const totalSpent = state.transactions
+    .map(({ amount }) => amount)
+    .reduce((accum, curr) => accum + curr, 0);
+
   return (
     <Container>
       <Menu
@@ -100,12 +103,12 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
       <Segment>
         <StatisticGroup widths="2">
           <Statistic color="green">
-            <Statistic.Value>$1,766</Statistic.Value>
-            <Statistic.Label>Amount Remaining</Statistic.Label>
+            <Statistic.Value>${totalSpent / 100}</Statistic.Value>
+            <Statistic.Label>Amount Spent over 30 days</Statistic.Label>
           </Statistic>
           <Statistic color="blue">
-            <Statistic.Value>25</Statistic.Value>
-            <Statistic.Label>Transactions this month</Statistic.Label>
+            <Statistic.Value>{state.transactions.length}</Statistic.Value>
+            <Statistic.Label>Transactions over 30 days</Statistic.Label>
           </Statistic>
         </StatisticGroup>
       </Segment>
