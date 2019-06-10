@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { Message } from 'semantic-ui-react';
+import { Message, Segment, Header, Container, Icon } from 'semantic-ui-react';
 
 import { GoogleLogin } from 'react-google-login';
 
@@ -80,16 +80,22 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <>
-      <GoogleLogin
-        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
-        buttonText="Login with Google"
-        cookiePolicy="single_host_origin"
-        onSuccess={success}
-        onFailure={failure}
-      />
-      {loginState.error ? <LoginError error={loginState.error} /> : null}
-    </>
+    <Container>
+      <Segment placeholder>
+        <Header icon>
+          <Icon name="book" />
+          Please login to view your transactions!
+        </Header>
+        <GoogleLogin
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}
+          buttonText="Login with Google"
+          cookiePolicy="single_host_origin"
+          onSuccess={success}
+          onFailure={failure}
+        />
+        {loginState.error ? <LoginError error={loginState.error} /> : null}
+      </Segment>
+    </Container>
   );
 };
 
