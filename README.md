@@ -13,6 +13,8 @@ Since it's a Phoenix app generated with `mix phx.new`, you can just do the follo
 ```bash
 cd backend
 
+mix deps.get
+
 # run to setup the ecto
 mix ecto.setup
 
