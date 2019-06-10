@@ -94,7 +94,7 @@ export const Dashboard: React.FC<RouteComponentProps> = ({
         color="blue"
         style={{ padding: '1em', fontSize: '1.2em' }}
       >
-        <Menu.Item position="left" name="Budgetr" />
+        <Menu.Item position="left" name="Budgetr" link={true} as="a" href="/" />
         <Menu.Item
           position="right"
           name={`${user.first_name} ${user.last_name}`}
