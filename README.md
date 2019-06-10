@@ -28,6 +28,10 @@ In a different terminal screen/window
 
 ```bash
 cd budgetr
+# or npm install
+yarn
+
+# or npm start
 yarn start
 ```
 
